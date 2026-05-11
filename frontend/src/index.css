@@ -1,0 +1,702 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary-50: #eef4ff;
+  --color-primary-100: #d9e6ff;
+  --color-primary-200: #bcd2ff;
+  --color-primary-300: #8eb3ff;
+  --color-primary-400: #5a8aff;
+  --color-primary-500: #3563ff;
+  --color-primary-600: #2447e6;
+  --color-primary-700: #1d39bf;
+  --color-primary-800: #1c3399;
+  --color-primary-900: #1c2f7a;
+
+  --color-accent-400: #a78bfa;
+  --color-accent-500: #8b5cf6;
+  --color-accent-600: #7c3aed;
+
+  --color-mint-400: #34d399;
+  --color-mint-500: #10b981;
+
+  --color-ink-950: #030712;
+  --color-ink-900: #0a0f1f;
+  --color-ink-880: #0d1426;
+  --color-ink-850: #0f172a;
+  --color-ink-800: #111827;
+  --color-ink-700: #1f2937;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+}
+
+body {
+  background-color: #030712;
+  color: #e5e7eb;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(53, 99, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139, 92, 246, 0.1), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* ==================== WCAG LIGHT MODE TEXT CONTRAST IMPROVEMENTS ==================== */
+/* Oq rejimdagi barcha o'qib bo'lmaydigan och kulrang matnlarni zich va kontrastli qilamiz */
+html:not(.dark) body {
+  background-color: #f4f6fa;
+  color: #0f172a;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(53, 99, 255, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139, 92, 246, 0.08), transparent 60%);
+}
+
+/* --- Matn ranglari --- */
+html:not(.dark) .text-slate-600,
+html:not(.dark) .text-slate-500 {
+  color: #475569 !important; /* slate-600 */
+}
+html:not(.dark) .text-slate-400 {
+  color: #475569 !important; /* slate-600 */
+}
+html:not(.dark) .text-slate-300 {
+  color: #1e293b !important; /* slate-800 */
+}
+html:not(.dark) .text-slate-200,
+html:not(.dark) .text-slate-100,
+html:not(.dark) .text-white {
+  color: #0f172a !important; /* slate-900 */
+}
+
+/* --- text-white'ni rangli qattiq fonlar ustida saqlab qolamiz (tugma, badge, gradientlar) --- */
+html:not(.dark) [class*="bg-primary-5"] .text-white,
+html:not(.dark) [class*="bg-primary-5"].text-white,
+html:not(.dark) [class*="bg-primary-6"] .text-white,
+html:not(.dark) [class*="bg-primary-6"].text-white,
+html:not(.dark) [class*="bg-primary-7"] .text-white,
+html:not(.dark) [class*="bg-primary-7"].text-white,
+html:not(.dark) [class*="bg-rose-5"] .text-white,
+html:not(.dark) [class*="bg-rose-5"].text-white,
+html:not(.dark) [class*="bg-rose-6"] .text-white,
+html:not(.dark) [class*="bg-rose-6"].text-white,
+html:not(.dark) [class*="bg-emerald-5"] .text-white,
+html:not(.dark) [class*="bg-emerald-5"].text-white,
+html:not(.dark) [class*="bg-emerald-6"] .text-white,
+html:not(.dark) [class*="bg-emerald-6"].text-white,
+html:not(.dark) [class*="bg-amber-5"] .text-white,
+html:not(.dark) [class*="bg-amber-5"].text-white,
+html:not(.dark) [class*="bg-amber-6"] .text-white,
+html:not(.dark) [class*="bg-amber-6"].text-white,
+html:not(.dark) [class*="bg-violet-5"] .text-white,
+html:not(.dark) [class*="bg-violet-5"].text-white,
+html:not(.dark) [class*="bg-violet-6"] .text-white,
+html:not(.dark) [class*="bg-violet-6"].text-white,
+html:not(.dark) [class*="bg-pink-5"] .text-white,
+html:not(.dark) [class*="bg-pink-5"].text-white,
+html:not(.dark) [class*="bg-pink-6"] .text-white,
+html:not(.dark) [class*="bg-pink-6"].text-white,
+html:not(.dark) [class*="bg-sky-5"] .text-white,
+html:not(.dark) [class*="bg-sky-5"].text-white,
+html:not(.dark) [class*="bg-sky-6"] .text-white,
+html:not(.dark) [class*="bg-sky-6"].text-white,
+html:not(.dark) [class*="bg-fuchsia-5"] .text-white,
+html:not(.dark) [class*="bg-fuchsia-5"].text-white,
+html:not(.dark) [class*="bg-orange-5"] .text-white,
+html:not(.dark) [class*="bg-orange-5"].text-white,
+html:not(.dark) [class*="bg-teal-5"] .text-white,
+html:not(.dark) [class*="bg-teal-5"].text-white,
+html:not(.dark) [class*="bg-indigo-5"] .text-white,
+html:not(.dark) [class*="bg-indigo-5"].text-white,
+html:not(.dark) [class*="bg-gradient-to"] .text-white,
+html:not(.dark) [class*="bg-gradient-to"].text-white {
+  color: #ffffff !important;
+}
+
+/* --- Avatar, primary tugmalar, badge dot'lari uchun ham slate-100, slate-200 ham himoyalanadi --- */
+html:not(.dark) [class*="bg-primary-5"] [class^="text-slate-1"],
+html:not(.dark) [class*="bg-primary-5"] [class^="text-slate-2"],
+html:not(.dark) [class*="bg-gradient-to"] [class^="text-slate-1"],
+html:not(.dark) [class*="bg-gradient-to"] [class^="text-slate-2"] {
+  color: #ffffff !important;
+}
+html:not(.dark) .placeholder\:text-slate-500::placeholder,
+html:not(.dark) .placeholder\:text-slate-400::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* --- Yorqin badge text-NUM-300 ranglari light'da o'qib bo'lmaydi: kuchaytiramiz --- */
+html:not(.dark) .text-primary-300 { color: #1d39bf !important; }
+html:not(.dark) .text-primary-400 { color: #2447e6 !important; }
+html:not(.dark) .text-primary-200 { color: #1d39bf !important; }
+html:not(.dark) .text-primary-100 { color: #1c3399 !important; }
+html:not(.dark) .text-emerald-300, html:not(.dark) .text-emerald-200, html:not(.dark) .text-emerald-100 { color: #047857 !important; }
+html:not(.dark) .text-amber-300, html:not(.dark) .text-amber-200, html:not(.dark) .text-amber-100 { color: #b45309 !important; }
+html:not(.dark) .text-rose-300, html:not(.dark) .text-rose-200, html:not(.dark) .text-rose-100 { color: #be123c !important; }
+html:not(.dark) .text-sky-300, html:not(.dark) .text-sky-200, html:not(.dark) .text-sky-100 { color: #0369a1 !important; }
+html:not(.dark) .text-violet-300, html:not(.dark) .text-violet-200, html:not(.dark) .text-violet-100 { color: #6d28d9 !important; }
+html:not(.dark) .text-pink-300, html:not(.dark) .text-pink-200, html:not(.dark) .text-pink-100 { color: #be185d !important; }
+
+/* --- bg-white/* foydalanilgan barcha shaffof yuzalar --- */
+html:not(.dark) .bg-white\/\[0\.01\],
+html:not(.dark) .bg-white\/\[0\.015\],
+html:not(.dark) .bg-white\/\[0\.02\] {
+  background-color: #f8fafc !important; /* slate-50 */
+}
+html:not(.dark) .bg-white\/\[0\.03\],
+html:not(.dark) .bg-white\/\[0\.04\] {
+  background-color: #f1f5f9 !important; /* slate-100 */
+}
+html:not(.dark) .bg-white\/5,
+html:not(.dark) .bg-white\/\[0\.05\],
+html:not(.dark) .bg-white\/\[0\.06\],
+html:not(.dark) .bg-white\/\[0\.08\] {
+  background-color: #e2e8f0 !important; /* slate-200 */
+}
+html:not(.dark) .bg-white\/10,
+html:not(.dark) .bg-white\/15 {
+  background-color: #cbd5e1 !important; /* slate-300 */
+}
+html:not(.dark) .hover\:bg-white\/5:hover,
+html:not(.dark) .hover\:bg-white\/\[0\.03\]:hover,
+html:not(.dark) .hover\:bg-white\/\[0\.04\]:hover,
+html:not(.dark) .hover\:bg-white\/\[0\.05\]:hover,
+html:not(.dark) .hover\:bg-white\/\[0\.06\]:hover,
+html:not(.dark) .hover\:bg-white\/\[0\.08\]:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* --- Border-white/* light variantlari --- */
+html:not(.dark) .border-white\/\[0\.04\],
+html:not(.dark) .border-white\/\[0\.05\],
+html:not(.dark) .border-white\/\[0\.06\],
+html:not(.dark) .border-white\/\[0\.08\] {
+  border-color: #e2e8f0 !important; /* slate-200 */
+}
+html:not(.dark) .border-white\/10,
+html:not(.dark) .border-white\/15,
+html:not(.dark) .border-white\/20 {
+  border-color: #cbd5e1 !important; /* slate-300 */
+}
+html:not(.dark) .divide-white\/\[0\.04\] > :not([hidden]) ~ :not([hidden]),
+html:not(.dark) .divide-white\/\[0\.05\] > :not([hidden]) ~ :not([hidden]),
+html:not(.dark) .divide-white\/\[0\.06\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0 !important;
+}
+
+/* --- bg-ink-* (qattiq dark fonlar) --- */
+html:not(.dark) .bg-ink-700 { background-color: #f8fafc !important; }
+html:not(.dark) .bg-ink-800 { background-color: #ffffff !important; }
+html:not(.dark) .bg-ink-850 { background-color: #ffffff !important; }
+html:not(.dark) .bg-ink-880 { background-color: #ffffff !important; }
+html:not(.dark) .bg-ink-900 { background-color: #ffffff !important; }
+html:not(.dark) .bg-ink-950 { background-color: #ffffff !important; }
+html:not(.dark) .bg-ink-900\/40,
+html:not(.dark) .bg-ink-900\/50,
+html:not(.dark) .bg-ink-900\/60,
+html:not(.dark) .bg-ink-900\/80,
+html:not(.dark) .bg-ink-950\/40,
+html:not(.dark) .bg-ink-950\/50 { background-color: rgba(248, 250, 252, 0.75) !important; backdrop-filter: blur(8px); }
+html:not(.dark) .bg-ink-950\/60 { background-color: rgba(255, 255, 255, 0.85) !important; backdrop-filter: blur(12px); }
+html:not(.dark) .bg-ink-950\/80 { background-color: rgba(248, 250, 252, 0.92) !important; backdrop-filter: blur(12px); }
+html:not(.dark) .bg-ink-950\/85 { background-color: rgba(248, 250, 252, 0.95) !important; backdrop-filter: blur(12px); }
+html:not(.dark) .bg-ink-950\/95 { background-color: rgba(255, 255, 255, 0.97) !important; backdrop-filter: blur(14px); }
+
+/* --- ring-offset-ink-950 → light variantda oq --- */
+html:not(.dark) .ring-offset-ink-950 {
+  --tw-ring-offset-color: #ffffff !important;
+}
+
+/* --- Modal/overlay backdrops --- */
+html:not(.dark) .bg-black\/50,
+html:not(.dark) .bg-black\/60,
+html:not(.dark) .bg-black\/70,
+html:not(.dark) .bg-black\/80 {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+}
+html:not(.dark) .bg-black\/30 {
+  background-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+/* --- Gradient cover bloklari light'da juda to'q ko'rinadi --- */
+html:not(.dark) .from-black\/30,
+html:not(.dark) .from-black\/40 {
+  --tw-gradient-from: rgba(15, 23, 42, 0.10) !important;
+}
+html:not(.dark) .to-black\/30,
+html:not(.dark) .to-black\/40 {
+  --tw-gradient-to: rgba(15, 23, 42, 0.10) !important;
+}
+
+/* --- Inputlar light'da tabiiy bo'lishi uchun --- */
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select {
+  color: #0f172a;
+}
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* --- Scrollbar light --- */
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.55);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* --- Selection light --- */
+html:not(.dark) ::selection {
+  background: rgba(53, 99, 255, 0.18);
+  color: #0f172a;
+}
+
+/* --- Shimmer animation light fix --- */
+html:not(.dark) .animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(15, 23, 42, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* --- KBD (Enter belgisi top barda) --- */
+html:not(.dark) kbd {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+/* ==================== Solid Dark/Light Cards ==================== */
+.glass-card {
+  background-color: #0a0f1f;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+html:not(.dark) .glass-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -12px rgba(15, 23, 42, 0.06);
+}
+
+.glass-card-strong {
+  background-color: #030712;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+html:not(.dark) .glass-card-strong {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -12px rgba(15, 23, 42, 0.08);
+}
+
+/* ==================== Subject Specific Snake Borders ==================== */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-rotate {
+  from { --border-angle: 0deg; }
+  to { --border-angle: 360deg; }
+}
+
+/* 1. IT / Code (Pink / Fuchsia neon) */
+.border-it {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), rgba(255,255,255,0.08), rgba(255,255,255,0.08)) border-box;
+  border: 1px solid transparent;
+}
+.border-it:hover {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), #ec4899, #f43f5e, #ec4899) border-box;
+  animation: border-rotate 4s linear infinite;
+  box-shadow: 0 0 24px rgba(236, 72, 153, 0.22);
+}
+
+/* 2. Math (Mint / Emerald neon) */
+.border-math {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), rgba(255,255,255,0.08), rgba(255,255,255,0.08)) border-box;
+  border: 1px solid transparent;
+}
+.border-math:hover {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), #10b981, #34d399, #10b981) border-box;
+  animation: border-rotate 4s linear infinite;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.22);
+}
+
+/* 3. English (Blue / Indigo neon) */
+.border-english {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), rgba(255,255,255,0.08), rgba(255,255,255,0.08)) border-box;
+  border: 1px solid transparent;
+}
+.border-english:hover {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), #3563ff, #6366f1, #3563ff) border-box;
+  animation: border-rotate 4s linear infinite;
+  box-shadow: 0 0 24px rgba(53, 99, 255, 0.22);
+}
+
+/* 4. Physics (Amber / Gold neon) */
+.border-physics {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), rgba(255,255,255,0.08), rgba(255,255,255,0.08)) border-box;
+  border: 1px solid transparent;
+}
+.border-physics:hover {
+  background: linear-gradient(#0a0f1f, #0a0f1f) padding-box, linear-gradient(var(--border-angle), #f59e0b, #fb923c, #f59e0b) border-box;
+  animation: border-rotate 4s linear infinite;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.22);
+}
+
+/* Light mode overrides for subject borders */
+html:not(.dark) .border-it { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #cbd5e1, #cbd5e1) border-box; }
+html:not(.dark) .border-math { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #cbd5e1, #cbd5e1) border-box; }
+html:not(.dark) .border-english { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #cbd5e1, #cbd5e1) border-box; }
+html:not(.dark) .border-physics { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #cbd5e1, #cbd5e1) border-box; }
+
+html:not(.dark) .border-it:hover { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #ec4899, #f43f5e, #ec4899) border-box; }
+html:not(.dark) .border-math:hover { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #10b981, #34d399, #10b981) border-box; }
+html:not(.dark) .border-english:hover { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #3563ff, #6366f1, #3563ff) border-box; }
+html:not(.dark) .border-physics:hover { background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(var(--border-angle), #f59e0b, #fb923c, #f59e0b) border-box; }
+
+/* ==================== Glow border ==================== */
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(53, 99, 255, 0.7) 0%,
+    rgba(139, 92, 246, 0.4) 40%,
+    rgba(53, 99, 255, 0) 80%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-border-amber::before {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.8) 0%,
+    rgba(251, 113, 133, 0.4) 50%,
+    rgba(245, 158, 11, 0) 80%
+  );
+}
+
+/* ==================== Scrollbar ==================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.35);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* ==================== Patterns ==================== */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+html:not(.dark) .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ==================== Glows ==================== */
+.hero-glow {
+  background: radial-gradient(
+    60% 50% at 50% 0%,
+    rgba(53, 99, 255, 0.45) 0%,
+    rgba(139, 92, 246, 0.2) 30%,
+    rgba(53, 99, 255, 0) 60%
+  );
+}
+
+.glow-primary {
+  box-shadow:
+    0 0 0 1px rgba(53, 99, 255, 0.2),
+    0 8px 32px -8px rgba(53, 99, 255, 0.5),
+    0 0 60px -10px rgba(53, 99, 255, 0.3);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #8eb3ff 0%, #a78bfa 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+
+/* ==================== Animations ==================== */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+.animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.pulse-dot { animation: pulseDot 1.8s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeInUp 0.4s ease-out both; }
+
+@keyframes pingSlow {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.animate-ping-slow { animation: pingSlow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+/* Slow moving orb mesh background animations */
+@keyframes orbMoveOne {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -60px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.95); }
+}
+@keyframes orbMoveTwo {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-50px, 50px) scale(1.15); }
+}
+@keyframes orbMoveThree {
+  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(20px, -30px) scale(1.08) rotate(8deg); }
+}
+
+.animate-orb-1 {
+  animation: orbMoveOne 18s ease-in-out infinite;
+}
+.animate-orb-2 {
+  animation: orbMoveTwo 22s ease-in-out infinite;
+}
+.animate-orb-3 {
+  animation: orbMoveThree 26s ease-in-out infinite;
+}
+
+/* ==================== Toast animations ==================== */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-toast-in { animation: toastIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes toastBar {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+.animate-toast-bar { animation: toastBar linear forwards; }
+
+/* ==================== Premium Emoji Animations (Telegram-style) ==================== */
+.name-emoji {
+  display: inline-block;
+  font-size: 1.05em;
+  line-height: 1;
+  vertical-align: -0.05em;
+  filter: drop-shadow(0 0 6px rgba(53, 99, 255, 0.35));
+  transform-origin: center;
+}
+
+@keyframes nameEmojiPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.4)); }
+  50%      { transform: scale(1.18); filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.85)); }
+}
+.name-emoji-pulse { animation: nameEmojiPulse 1.6s ease-in-out infinite; }
+
+@keyframes nameEmojiBounce {
+  0%, 100% { transform: translateY(0); }
+  30%      { transform: translateY(-3px) scale(1.05); }
+  60%      { transform: translateY(0) scale(0.97); }
+}
+.name-emoji-bounce { animation: nameEmojiBounce 1.4s ease-in-out infinite; }
+
+@keyframes nameEmojiSpin {
+  to { transform: rotate(360deg); }
+}
+.name-emoji-spin { animation: nameEmojiSpin 3s linear infinite; }
+
+@keyframes nameEmojiWave {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-18deg); }
+  40%      { transform: rotate(14deg); }
+  60%      { transform: rotate(-10deg); }
+  80%      { transform: rotate(6deg); }
+}
+.name-emoji-wave { animation: nameEmojiWave 1.8s ease-in-out infinite; transform-origin: 60% 80%; }
+
+@keyframes nameEmojiFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3.5px); }
+}
+.name-emoji-float { animation: nameEmojiFloat 2.4s ease-in-out infinite; }
+
+@keyframes nameEmojiGlow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.4)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.95)) drop-shadow(0 0 22px rgba(255, 165, 0, 0.6)); }
+}
+.name-emoji-glow { animation: nameEmojiGlow 1.8s ease-in-out infinite; }
+
+@keyframes nameEmojiShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-2px) rotate(-3deg); }
+  40%      { transform: translateX(2px) rotate(3deg); }
+  60%      { transform: translateX(-1.5px) rotate(-2deg); }
+  80%      { transform: translateX(1.5px) rotate(2deg); }
+}
+.name-emoji-shake { animation: nameEmojiShake 0.7s ease-in-out infinite; }
+
+@keyframes nameEmojiFlip {
+  0%, 100% { transform: perspective(120px) rotateY(0deg); }
+  50%      { transform: perspective(120px) rotateY(180deg); }
+}
+.name-emoji-flip { animation: nameEmojiFlip 2.4s ease-in-out infinite; }
+
+@keyframes nameEmojiHeartbeat {
+  0%, 100%        { transform: scale(1); }
+  10%, 30%        { transform: scale(1.18); }
+  20%, 40%        { transform: scale(0.95); }
+  50%, 70%        { transform: scale(1); }
+}
+.name-emoji-heartbeat { animation: nameEmojiHeartbeat 1.4s ease-in-out infinite; }
+
+@keyframes nameEmojiRainbow {
+  0%   { filter: hue-rotate(0deg)   drop-shadow(0 0 6px rgba(255,255,255,.5)); }
+  100% { filter: hue-rotate(360deg) drop-shadow(0 0 6px rgba(255,255,255,.5)); }
+}
+.name-emoji-rainbow { animation: nameEmojiRainbow 2.4s linear infinite; }
+
+/* ==================== Marquee ==================== */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* ==================== Selection ==================== */
+::selection {
+  background: rgba(53, 99, 255, 0.35);
+  color: #ffffff;
+}
+
+/* ==================== Utility ==================== */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ==================== Brand Animation Presets ==================== */
+.brand-pulse { animation: pulseDot 1.8s ease-in-out infinite; }
+.brand-float { animation: float 5s ease-in-out infinite; }
+.brand-shine { position: relative; overflow: hidden; }
+.brand-shine::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); animation: brandShine 2.8s linear infinite; }
+.brand-glow { filter: drop-shadow(0 0 10px rgba(90, 138, 255, .45)); }
+.brand-gradientShift { background-size: 200% 200%; animation: brandGradient 4s ease infinite; }
+.brand-typewriter { overflow: hidden; white-space: nowrap; border-right: 1px solid currentColor; animation: brandTyping 2.6s steps(16, end) infinite alternate; }
+.brand-wave { animation: brandWave 1.8s ease-in-out infinite; transform-origin: bottom center; }
+.brand-bounceSoft { animation: brandBounce 2s ease-in-out infinite; }
+.brand-neon { text-shadow: 0 0 8px rgba(90,138,255,.75), 0 0 16px rgba(139,92,246,.45); }
+.brand-spark { animation: brandSpark 2.2s steps(2, end) infinite; }
+.brand-blurIn { animation: brandBlur 2.4s ease-in-out infinite alternate; }
+.brand-slideIn { animation: brandSlide 2.4s ease-in-out infinite alternate; }
+.brand-zoomIn { animation: brandZoom 2.2s ease-in-out infinite alternate; }
+.brand-rotateSoft { animation: brandRotate 3.6s ease-in-out infinite; }
+.brand-letterSpacing { animation: brandSpacing 2.8s ease-in-out infinite alternate; }
+.brand-rainbow { animation: brandHue 4s linear infinite; }
+.brand-shadowPulse { animation: brandShadowPulse 2s ease-in-out infinite; }
+.brand-underlineFlow { text-decoration: underline; text-decoration-color: rgba(90,138,255,.8); text-underline-offset: 4px; animation: brandSpacing 2.8s ease-in-out infinite alternate; }
+.brand-matrixSoft { text-shadow: 0 0 8px rgba(16,185,129,.6); animation: brandMatrix 1.6s steps(3, end) infinite; }
+
+@keyframes brandShine { to { transform: translateX(120%); } }
+@keyframes brandGradient { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes brandTyping { from { max-width: 3ch; } to { max-width: 22ch; } }
+@keyframes brandWave { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-3deg); } }
+@keyframes brandBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes brandSpark { 0%,100% { opacity: 1; } 50% { opacity: .7; } }
+@keyframes brandBlur { from { filter: blur(0); } to { filter: blur(.5px); } }
+@keyframes brandSlide { from { transform: translateX(0); } to { transform: translateX(4px); } }
+@keyframes brandZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+@keyframes brandRotate { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(4deg); } }
+@keyframes brandSpacing { from { letter-spacing: -0.01em; } to { letter-spacing: .08em; } }
+@keyframes brandHue { to { filter: hue-rotate(360deg); } }
+@keyframes brandShadowPulse { 0%,100% { text-shadow: 0 0 4px rgba(90,138,255,.4); } 50% { text-shadow: 0 0 14px rgba(139,92,246,.8); } }
+@keyframes brandMatrix { 0%,100% { opacity: 1; } 33% { opacity: .8; } 66% { opacity: .95; } }

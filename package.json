@@ -1,0 +1,16 @@
+{
+  "name": "talim-platformasi",
+  "private": true,
+  "description": "Talim platformasi – backend va frontend",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend",
+    "seed": "node run-seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

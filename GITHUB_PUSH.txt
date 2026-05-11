@@ -1,0 +1,23 @@
+GitHub ga yuklash (Unknown0223)
+
+1) Brauzerda yangi repozitoriya yarating:
+   https://github.com/new
+   - Repository name: Talim_platformasi
+   - Public yoki Private — o‘zingiz tanlang
+   - README / .gitignore qo‘shmang (bo‘sh repozitoriya)
+
+2) Lokal papkada (PowerShell):
+   cd E:\Talim_platformasi
+   git branch -M main
+   git add -A
+   git status
+   git commit -m "Talim platformasi: backend, frontend, diplom generatorlar"
+   git push -u origin main
+
+3) Agar HTTPS parol so‘rasa — GitHub «Personal Access Token» ishlating (parol emas):
+   https://github.com/settings/tokens
+
+4) Agar boshqa nom tanlasangiz, remote ni o‘zgartiring:
+   git remote set-url origin https://github.com/Unknown0223/SIZNING_NOMINGIZ.git
+
+Eski remote: Talim-_platformasi (topilmadi) — yangi: Talim_platformasi

@@ -1,0 +1,636 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  student
+  teacher
+  admin
+  cashier
+  receptionist
+  parent
+}
+
+enum CourseLevel {
+  Beginner
+  Intermediate
+  Advanced
+}
+
+enum CourseType {
+  online
+  offline
+}
+
+enum EnrollmentStatus {
+  active
+  completed
+  cancelled
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  name                String
+  email               String    @unique
+  passwordHash        String
+  role                Role      @default(student)
+  studentId           String?   @unique
+  xp                  Int       @default(0)
+  coins               Int       @default(0)
+  badges              String[]  @default([])
+  rank                String    @default("Beginner")
+  referralCode        String?   @unique
+  referralCount       Int       @default(0)
+  firstName           String?
+  lastName            String?
+  birthDate           DateTime?
+  balance             Int       @default(0)
+  telegramId          String?   @unique
+  isApproved          Boolean   @default(true)
+  avatar              String?
+  coverImage          String?
+  nameEmoji           String?
+  nameEmojiAnim       String?
+  permissions         String[]  @default([])
+  permissionsOverride Boolean   @default(false)
+  lastSeen            DateTime?
+
+  // Relations
+  referredById String?
+  referredBy   User?   @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals    User[]  @relation("UserReferrals")
+
+  parentOf ParentChild[] @relation("ParentUsers")
+  childOf  ParentChild[] @relation("ChildUsers")
+
+  managedCourses          ManagedCourse[]
+  managedSubjects         ManagedSubject[]
+  conversationMemberships ConversationMember[]
+  conversationsCreated    Conversation[]       @relation("ConversationCreator")
+
+  teacherDetails TeacherDetails?
+
+  taughtCourses            Course[]             @relation("CourseTeacher")
+  schedulesTeaching        Schedule[]
+  enrollments              Enrollment[]
+  messagesSent             Message[]            @relation("MessageSender")
+  messagesRecv             Message[]            @relation("MessageReceiver")
+  invitesSent              ConversationInvite[] @relation("InviteSender")
+  invitesRecv              ConversationInvite[] @relation("InviteReceiver")
+  callsStarted             CallSession[]        @relation("CallCaller")
+  callsReceived            CallSession[]        @relation("CallCallee")
+  attendances              Attendance[]
+  payments                 Payment[]
+  testResults              TestResult[]
+  testsAuthored            Test[]               @relation("TestAuthor")
+  certificates             Certificate[]
+  quizAttempts             QuizAttempt[]
+  battlesHosted            Battle[]             @relation("BattleTeacher")
+  teacherReviews           TeacherReview[]      @relation("TeacherReviewTeacher")
+  teacherReviewsGiven      TeacherReview[]      @relation("TeacherReviewStudent")
+  notifications            Notification[]
+  discountCampaignsCreated DiscountCampaign[]   @relation("DiscountCampaignCreator")
+  discountAwards           DiscountAward[]
+  feedbacksAuthored        Feedback[]           @relation("FeedbackAuthor")
+  feedbacksTargeted        Feedback[]           @relation("FeedbackTarget")
+  feedbacksResponded       Feedback[]           @relation("FeedbackResponder")
+  newsParticipations       NewsParticipant[]    @relation("NewsParticipantUser")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeacherDetails {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  specialization String?
+  education      String?
+  experience     String?
+  achievements   String[] @default([])
+  bio            String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ParentChild {
+  id       String @id @default(cuid())
+  parentId String
+  childId  String
+
+  parent User @relation("ParentUsers", fields: [parentId], references: [id], onDelete: Cascade)
+  child  User @relation("ChildUsers", fields: [childId], references: [id], onDelete: Cascade)
+
+  @@unique([parentId, childId])
+}
+
+model Subject {
+  id                String             @id @default(cuid())
+  name              String             @unique
+  description       String?
+  courses           Course[]
+  tests             Test[]
+  testResults       TestResult[]
+  battles           Battle[]
+  discountCampaigns DiscountCampaign[]
+
+  managedBy ManagedSubject[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ManagedSubject {
+  id        String  @id @default(cuid())
+  userId    String
+  subjectId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectId])
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  title       String
+  subjectId   String
+  teacherId   String
+  level       CourseLevel @default(Beginner)
+  type        CourseType
+  price       Int         @default(0)
+  description String      @default("")
+  icon        String?
+  imageUrl    String?
+  color       String?
+
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  teacher User    @relation("CourseTeacher", fields: [teacherId], references: [id], onDelete: Restrict)
+
+  lessons           Lesson[]
+  schedules         Schedule[]
+  enrollments       Enrollment[]
+  certificates      Certificate[]
+  payments          Payment[]
+  tests             Test[]
+  battles           Battle[]
+  discountCampaigns DiscountCampaign[]
+  discountAwards    DiscountAward[]
+  feedbacks         Feedback[]
+
+  managedBy ManagedCourse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ManagedCourse {
+  id       String @id @default(cuid())
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model Enrollment {
+  id          String           @id @default(cuid())
+  userId      String
+  courseId    String
+  status      EnrollmentStatus @default(active)
+  completedAt DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model Lesson {
+  id       String  @id @default(cuid())
+  courseId String
+  title    String
+  videoUrl String? @default("")
+  liveLink String? @default("")
+  type     String  @default("video") // "video" | "live"
+
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseId, title])
+}
+
+model Location {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  address   String
+  lat       Float?
+  lng       Float?
+  rooms     Room[]
+  schedules Schedule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id         String    @id @default(cuid())
+  name       String
+  building   String?
+  capacity   Int       @default(0)
+  locationId String?
+  location   Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, building])
+}
+
+model Schedule {
+  id         String   @id @default(cuid())
+  courseId   String
+  locationId String?
+  teacherId  String?
+  date       DateTime
+  time       String
+  topic      String?
+
+  course   Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  location Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  teacher  User?     @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+
+  attendances Attendance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseId, date, time])
+}
+
+model Attendance {
+  id         String  @id @default(cuid())
+  scheduleId String?
+  userId     String
+  status     String // "+" | "-" | "present" | "absent"
+  note       String?
+
+  schedule Schedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id             String    @id @default(cuid())
+  senderId       String
+  receiverId     String
+  conversationId String?
+  text           String
+  readAt         DateTime?
+
+  sender       User                @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User                @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation Conversation?       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachments  MessageAttachment[]
+
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id          String               @id @default(cuid())
+  type        String               @default("direct") // "direct" | "group"
+  title       String?
+  createdById String?
+  createdBy   User?                @relation("ConversationCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  members     ConversationMember[]
+  messages    Message[]
+  invites     ConversationInvite[]
+  calls       CallSession[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+}
+
+model ConversationMember {
+  id             String       @id @default(cuid())
+  conversationId String
+  userId         String
+  role           String       @default("member")
+  status         String       @default("active")
+  unreadCount    Int          @default(0)
+  lastReadAt     DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([conversationId, userId])
+}
+
+model ConversationInvite {
+  id             String        @id @default(cuid())
+  conversationId String?
+  requesterId    String
+  receiverId     String
+  status         String        @default("pending") // "pending" | "accepted" | "rejected"
+  message        String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  requester      User          @relation("InviteSender", fields: [requesterId], references: [id], onDelete: Cascade)
+  receiver       User          @relation("InviteReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model MessageAttachment {
+  id        String   @id @default(cuid())
+  messageId String
+  name      String
+  url       String
+  mimeType  String?
+  size      Int?
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model CallSession {
+  id             String        @id @default(cuid())
+  conversationId String?
+  callerId       String
+  calleeId       String?
+  type           String        @default("audio") // "audio" | "video"
+  status         String        @default("ringing") // "ringing" | "accepted" | "rejected" | "ended"
+  offer          Json?
+  answer         Json?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  caller         User          @relation("CallCaller", fields: [callerId], references: [id], onDelete: Cascade)
+  callee         User?         @relation("CallCallee", fields: [calleeId], references: [id], onDelete: SetNull)
+  endedAt        DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Book {
+  id          String  @id @default(cuid())
+  title       String
+  author      String?
+  description String?
+  category    String?
+  fileUrl     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id              String  @id @default(cuid())
+  userId          String?
+  courseId        String?
+  amount          Int
+  originalAmount  Int?
+  discountAmount  Int     @default(0)
+  discountAwardId String?
+  method          String?
+  status          String?
+
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  course        Course?        @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  discountAward DiscountAward? @relation(fields: [discountAwardId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DiscountCampaign {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  courseId    String?
+  subjectId   String?
+  type        String    @default("percent")
+  value       Int
+  maxWinners  Int?
+  rules       Json?
+  status      String    @default("draft")
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdById String?
+
+  course    Course?         @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  subject   Subject?        @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdBy User?           @relation("DiscountCampaignCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  awards    DiscountAward[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DiscountAward {
+  id             String  @id @default(cuid())
+  campaignId     String
+  userId         String
+  courseId       String?
+  status         String  @default("eligible")
+  source         String  @default("auto")
+  reason         String?
+  score          Int?
+  discountAmount Int?
+
+  campaign DiscountCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([campaignId, userId, courseId])
+}
+
+model Test {
+  id            String   @id @default(cuid())
+  subjectId     String
+  courseId      String?
+  teacherId     String?
+  question      String
+  options       String[]
+  correctAnswer String
+  level         String   @default("Beginner")
+
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  course  Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher User?   @relation("TestAuthor", fields: [teacherId], references: [id], onDelete: SetNull)
+  // TestResult is aggregated per subject (not per test row) in current app.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([subjectId, question])
+}
+
+model TestResult {
+  id             String @id @default(cuid())
+  userId         String
+  subjectId      String
+  score          Int
+  totalQuestions Int
+  level          String @default("Beginner")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subjectId])
+}
+
+model Certificate {
+  id       String   @id @default(cuid())
+  userId   String
+  courseId String
+  issuedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  mode      String?
+  score     Int      @default(0)
+  meta      Json?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model TeacherReview {
+  id        String  @id @default(cuid())
+  teacherId String
+  studentId String
+  rating    Int
+  comment   String?
+
+  teacher User @relation("TeacherReviewTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  student User @relation("TeacherReviewStudent", fields: [studentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([teacherId, studentId])
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String?
+  senderId    String?
+  title       String
+  body        String?
+  category    String    @default("general")
+  targetRoles String[]  @default([])
+  readAt      DateTime?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+}
+
+model NewsItem {
+  id                    String            @id @default(cuid())
+  title                 String
+  body                  String
+  type                  String            @default("news")
+  icon                  String?
+  color                 String?
+  imageUrl              String?
+  ctaLabel              String?
+  ctaUrl                String?
+  audienceRoles         String[]          @default([])
+  startsAt              DateTime?
+  endsAt                DateTime?
+  priority              Int               @default(0)
+  isPublished           Boolean           @default(true)
+  // Tanlov / sovrinli tadbir uchun yangi maydonlar
+  requiresParticipation Boolean           @default(false)
+  maxParticipants       Int?
+  prize                 String?
+  participants          NewsParticipant[] @relation("NewsParticipantNews")
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+}
+
+model NewsParticipant {
+  id       String   @id @default(cuid())
+  newsId   String
+  userId   String
+  joinedAt DateTime @default(now())
+  isWinner Boolean  @default(false)
+
+  news NewsItem @relation("NewsParticipantNews", fields: [newsId], references: [id], onDelete: Cascade)
+  user User     @relation("NewsParticipantUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, userId])
+  @@index([newsId])
+  @@index([userId])
+}
+
+model Battle {
+  id        String    @id @default(cuid())
+  teacherId String?
+  courseId  String?
+  subjectId String?
+  title     String?
+  status    String    @default("open")
+  startsAt  DateTime?
+  endsAt    DateTime?
+  mode      String?
+  meta      Json?
+  teacher   User?     @relation("BattleTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  subject   Subject?  @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdAt DateTime  @default(now())
+}
+
+model Feedback {
+  id             String    @id @default(cuid())
+  userId         String
+  type           String    @default("suggestion") // 'suggestion' | 'complaint' | 'question' | 'praise'
+  category       String    @default("general") // 'general' | 'teacher' | 'course' | 'center' | 'system' | 'payment'
+  subject        String
+  body           String
+  status         String    @default("new") // 'new' | 'in_review' | 'resolved' | 'rejected'
+  priority       String    @default("normal") // 'low' | 'normal' | 'high'
+  isAnonymous    Boolean   @default(false)
+  targetUserId   String?
+  targetCourseId String?
+  adminResponse  String?
+  respondedById  String?
+  respondedAt    DateTime?
+
+  user         User    @relation("FeedbackAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  targetUser   User?   @relation("FeedbackTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+  targetCourse Course? @relation(fields: [targetCourseId], references: [id], onDelete: SetNull)
+  respondedBy  User?   @relation("FeedbackResponder", fields: [respondedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+}

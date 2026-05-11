@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Sensitive files (auto-detected)
+node_modules
+
+
+# Lint/temp files
+lint*.txt
+frontend/theme*.js
+.cursor/
+.claude/
+
+# User uploads (do not publish to GitHub)
+backend/uploads/
+
+# Local diplom tooling deps
+diplom/node_modules/

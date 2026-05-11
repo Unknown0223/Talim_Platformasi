@@ -1,0 +1,12 @@
+{
+  "name": "diplom-hujjat-generator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:docx": "node generate-diploma-template.mjs",
+    "build:thesis": "node generate-full-thesis.mjs"
+  },
+  "dependencies": {
+    "docx": "^9.5.0"
+  }
+}
