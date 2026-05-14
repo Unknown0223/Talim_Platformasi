@@ -1,41 +1,58 @@
 # Talim platformasi – ishga tushirish
 
-## 1. MongoDB kerak (ixtiyoriy – server MongoDB siz ham ishga tushadi)
+## 1. PostgreSQL (majburiy — Prisma)
 
-To‘liq ishlashi uchun MongoDB kerak.
+Backend **PostgreSQL** ga ulanadi. Loyiha ildizidagi `docker-compose.yml` **5433** portida konteynerni ko‘taradi.
 
-- **Variant A – Lokal:** [MongoDB Community](https://www.mongodb.com/try/download/community) o‘rnating (port 27017).
-- **Variant B – Bulut:** [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) da bepul cluster, connection string ni `backend/.env` da `MONGODB_URI` ga yozing.
-
-## 2. Bitta buyruq bilan ishga tushirish (tavsiya)
-
-Loyiha **ildizida** (`D:\Talim_platformasi` – backend va frontend papkalari ichida joylashgan papka):
+**Docker Desktop** o‘rnatilgan bo‘lishi kerak. Keyin:
 
 ```powershell
-cd D:\Talim_platformasi
+cd E:\Talim_platformasi
+npm run db:up
+cd backend
+npx prisma migrate deploy
+```
+
+`backend/.env` da `DATABASE_URL` quyidagiga o‘xshashi kerak (namuna `backend/.env.example` da):
+
+`postgresql://talim:0223@localhost:5433/talim?schema=public`
+
+Agar Postgres boshqa joyda bo‘lsa, `DATABASE_URL` ni o‘zgartiring.
+
+## 2. Eski MongoDB eslatmasi (agar kodda qolgan bo‘lsa)
+
+Ba’zi qismlar tarixan MongoDB haqida yozilgan bo‘lishi mumkin; asosiy ma’lumotlar bazasi hozir **PostgreSQL + Prisma**.
+
+## 3. Bitta buyruq bilan ishga tushirish (tavsiya)
+
+Loyiha **ildizida** (`E:\Talim_platformasi`):
+
+```powershell
+cd E:\Talim_platformasi
+npm run db:up
 npm start
 ```
 
-yoki:
+yoki (development):
 
 ```powershell
 npm run dev
 ```
 
-Bitta buyruq **backend** (port 5000) va **frontend** (port 5173) ni bir vaqtda ishga tushiradi. Bitta terminalda ikkala server ishlaydi.
+Bitta buyruq **backend** (port **5001**) va **frontend** (port **5173**) ni bir vaqtda ishga tushiradi. Bitta terminalda ikkala server ishlaydi.
 
 **Birinchi marta** (yoki yangi clone qilganda) barcha kutubxonalarni o‘rnatish:
 
 ```powershell
-cd D:\Talim_platformasi
+cd E:\Talim_platformasi
 npm run install:all
 ```
 
-Keyin har safar ishga tushirish uchun: `npm start`.
+Keyin har safar ishga tushirish uchun: avval `npm run db:up`, keyin `npm start` yoki `npm run dev`.
 
 To‘xtatish: `Ctrl+C` (bir marta bosish ikkalasini ham to‘xtatadi).
 
-## 3. Alohida terminallarda (ixtiyoriy)
+## 4. Alohida terminallarda (ixtiyoriy)
 
 Agar alohida ishga tushirmoqchi bo‘lsangiz:
 
@@ -49,9 +66,9 @@ cd frontend
 npm run dev
 ```
 
-## 4. Ma’lumotlarni yuklash (bir marta)
+## 5. Ma’lumotlarni yuklash (bir marta)
 
-Test hisoblar va matematika savollari uchun (MongoDB ishlayotgan bo‘lishi kerak):
+PostgreSQL ishlayotgan bo‘lishi kerak (`npm run db:up`). Keyin:
 
 ```bash
 npm run seed
@@ -59,11 +76,11 @@ npm run seed
 
 yoki `cd backend` qilib `npm run seed`.
 
-## 5. Brauzerda ochish
+## 6. Brauzerda ochish
 
 **http://localhost:5173**
 
-## 6. Test hisoblar (seed dan keyin)
+## 7. Test hisoblar (seed dan keyin)
 
 | Rol       | Email             | Parol       |
 |----------|-------------------|-------------|
@@ -71,7 +88,7 @@ yoki `cd backend` qilib `npm run seed`.
 | O‘qituvchi | teacher@talim.uz | password123 |
 | O‘quvchi | student@talim.uz | password123 |
 
-## 7. Qanday ishlatish
+## 8. Qanday ishlatish
 
 1. **http://localhost:5173** – bosh sahifa.
 2. **Kirish** – Login (yuqoridagi email/parol).
