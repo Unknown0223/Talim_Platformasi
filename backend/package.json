@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "start": "node src/index.js",
     "predev": "node src/scripts/freePort.js 5001",
     "dev": "node --watch src/index.js",
